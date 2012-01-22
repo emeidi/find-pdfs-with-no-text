@@ -44,13 +44,13 @@ do
 	
 	ABSPATH="$BASE/$i"
     
-    echo "$i"
-    echo "File $i seems not be OCRed yet ($LINES lines of text)"
+    echo "$ABSPATH"
+    echo "File '$i' seems not be OCRed yet ($LINES lines of text)"
     
     if [ $# -gt 0 ]
     then
-	echo "Executing $1 '$i'"
-	$1 "$i"
+	echo "Executing $1 '$ABSPATH'"
+	$1 "$ABSPATH"
     fi
 done
 

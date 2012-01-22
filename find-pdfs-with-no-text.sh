@@ -1,7 +1,6 @@
 #!/bin/sh
 
 PDF2TXT=`which pdftotext`
-ASCRIPT=`which osascript`
 
 if [ ! -e "$PDF2TXT" ]
 then
@@ -10,15 +9,18 @@ then
     exit 1
 fi
 
-if [ ! -e "$ASCRIPT" ]
+#echo $#
+if [ $# -gt 0 ]
 then
-    echo "Executable osascript not found"
-    echo "Are you running this script on Mac OS X? Is PATH set appropriatly?"
-    exit 1
+    echo "Checking for command to process un-OCRed PDFs"
+    
+    if [ ! -e "$1" ]
+    then
+        echo "Executable '$1' not found. Please make sure the file exists."
+        #exit 1
+    fi
 fi
 
-# Script to call when un-ocred PDF is found
-OCRSCRIPT="/Users/mario/ocr.scpt"
 BASE=`pwd`
 
 echo "Looking for PDFs in directory $BASE"
@@ -42,14 +44,14 @@ do
 	
 	ABSPATH="$BASE/$i"
     
+    echo "$i"
     echo "File $i seems not be OCRed yet ($LINES lines of text)"
     
-    # Pass file to an AppleScript file ...
-    #echo "Calling Adobe Acrobat: $ASCRIPT '$OCRSCRIPT' '$ABSPATH'"
-	#$ASCRIPT "$OCRSCRIPT" "$ABSPATH"
-	
-	# Or simply open it
-	open -a "Adobe Acrobat Pro" "$ABSPATH"
+    if [ $# -gt 0 ]
+    then
+	echo "Executing $1 '$i'"
+	$1 "$i"
+    fi
 done
 
 exit 0
